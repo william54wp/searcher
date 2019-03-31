@@ -1,0 +1,21 @@
+version: '2'
+volumes:
+  xunsearch:
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - 8080:80
+    volumes:
+      - $PWD/webroot:/webroot
+      - $PWD/config/default.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - php
+  php:
+    image: php:fpm-alpine
+    volumes:
+      - $PWD/webroot:/webroot
+  xunsearch:
+    image: hightman/xunsearch:latest
+    volumes:
+      - xunsearch:/usr/local/xunsearch/data
