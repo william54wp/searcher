@@ -8,6 +8,7 @@ services:
       - 8080:80
     volumes:
       - $PWD/webroot:/webroot
+      - /home/william_wp/.H/小说:/webroot/H
       - $PWD/config/default.conf:/etc/nginx/conf.d/default.conf
     links:
       - php
@@ -15,6 +16,7 @@ services:
     image: php:fpm-alpine
     volumes:
       - $PWD/webroot:/webroot
+      - /home/william_wp/.H/小说:/webroot/H
   xunsearch:
     image: hightman/xunsearch:latest
     volumes:

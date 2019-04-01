@@ -1,12 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+
 <body>
-    <h1>demo</h1> 
+
+    <div id="demo">
+    </div>
+
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="filename.js"></script>
+    <script>
+        var index = 0;
+        synImport(index);
+
+        function synImport(index) {
+            $.post("/import.php", {
+                    index: index,
+                    path: files[index]
+                },
+                function(data, textStatus, jqXHR) {
+                    if (data.status) {
+                        console.log(data);
+                    }
+                    if (index < 30) {
+                        synImport(++index);
+                    }
+                },
+                "json"
+            );
+        }
+    </script>
 </body>
+
 </html>
