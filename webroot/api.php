@@ -13,7 +13,6 @@
  */
 
 namespace api;
-
 require_once 'api/xunsearch/lib/XS.php';
 /**
  * Class Search
@@ -28,18 +27,27 @@ require_once 'api/xunsearch/lib/XS.php';
 
 class Searcher
 {
+    protected $xs;
+    
     /**
-     * Add Doc
+     * Class Init
+     */
+    function __construct()
+    {
+        $this->xs = new \XS('novel');
+    }
+
+    /**
+     * Public API action add Doc to Index
      *
-     * @param  XSDoc $doc doc for add to index
+     * @param array $docItem doc for add to index
      *
      * @return void
      */
     public function addDoc($docItem)
     {
         try {
-            $xs = new \XS('novel');
-            $index = $xs->index;
+            $index = $this->xs->index;
             $doc = new \XSDocument();
             $doc->setFields($docItem);
             $result = $index->add($doc);
@@ -53,22 +61,41 @@ class Searcher
     /**
      * Public action for Search from xunsearch server
      *
-     * @param string $query content
+     * @param string $query    content
+     * @param int    $pagesize pagesize of return
+     * @param int    $page     page of return
      *
-     * @return string result
+     * @return array result
      */
-    public function search($query)
+    public function search($query, $pagesize = 10, $page = 1)
     {
-        $xs = new \XS('novel');
-        $search = $xs->search;
-        $search->setQuery($query);
-        $result = $search->search();
-        return $result;
+        $offset = $pagesize * ($page - 1);
+        try {
+            $search = $this->xs->search;
+            $search->setQuery($query);
+            $search->setLimit($pagesize, $offset);
+            $data = $search->search();
+            $count = $search->count();
+            return ['status' => true, 'size' => $count, 'data' => $data];
+        } catch (\Exception $e) {
+            return ['status' => false,
+                'msg' => $e,
+            ];
+        }
     }
 
+    /**
+     * Api action for clear Index
+     *
+     * @return bool result
+     */
     public function clear()
     {
-        $xs = new \XS('novel');
-        $xs->index->clean();
+        try {
+            $this->xs->index->clean();
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

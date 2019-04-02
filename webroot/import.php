@@ -37,7 +37,8 @@ if (is_file($filepath)) {
         $search = new api\Searcher;
         $search->addDoc($doc);
         $status = true;
-        $msg = 'add Successful';
+        setcookie('novel_index', $id);
+        $msg = $id;
     } catch (\XSException $e) {
         $status = false;
         $msg = $e->message;

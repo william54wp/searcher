@@ -14,10 +14,18 @@
     </div>
 
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="filename.js"></script>
     <script>
         var index = 0;
-        synImport(index);
+        var count = 0;
+        var size = 9000;
+        var novel_index = $.cookie('novel_index');
+        if (novel_index) {
+            index = novel_index;
+        }
+
+        synImport(++index);
 
         function synImport(index) {
             $.post("/import.php", {
@@ -26,10 +34,11 @@
                 },
                 function(data, textStatus, jqXHR) {
                     if (data.status) {
-                        console.log(data);
-                    }
-                    if (index < 100) {
+                        console.log(data.msg);
+                    };
+                    if (count < size || index < files.size) {
                         synImport(++index);
+                        count++;
                     }
                 },
                 "json"
