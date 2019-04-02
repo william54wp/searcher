@@ -1,48 +1,54 @@
 import react from 'react';
-import { Input, Row, Col, List, Icon, Avatar} from 'antd';
+import { Input, Row, Col, List, Icon, Avatar } from 'antd';
 
 class Search extends react.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [
+                {
+                    title: 'Ant Design Title 1',
+                },
+                {
+                    title: 'Ant Design Title 2',
+                },
+                {
+                    title: 'Ant Design Title 3',
+                },
+                {
+                    title: 'Ant Design Title 4',
+                },
+                {
+                    title: 'Ant Design Title 4',
+                },
+                {
+                    title: 'Ant Design Title 4',
+                },
+                {
+                    title: 'Ant Design Title 4',
+                },
+                {
+                    title: 'Ant Design Title 4',
+                },
+                {
+                    title: 'Ant Design Title 4',
+                },
+                {
+                    title: 'Ant Design Title 4',
+                },
+            ]
+        }
+    }
     render() {
         const Search = Input.Search;
         const style = {
             width: '50vw',
             boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
             border: '1px solid #e8e8e8',
-        }
-        const data = [
-            {
-                title: 'Ant Design Title 1',
-            },
-            {
-                title: 'Ant Design Title 2',
-            },
-            {
-                title: 'Ant Design Title 3',
-            },
-            {
-                title: 'Ant Design Title 4',
-            },
-            {
-                title: 'Ant Design Title 4',
-            },
-            {
-                title: 'Ant Design Title 4',
-            },
-            {
-                title: 'Ant Design Title 4',
-            },
-            {
-                title: 'Ant Design Title 4',
-            },
-            {
-                title: 'Ant Design Title 4',
-            },
-            {
-                title: 'Ant Design Title 4',
-            },
-        ];
+        };
         return (
             <div>
+                {/* row of input */}
                 <Row type="flex" justify="start" align="middle" style={{ height: '12vh' }}>
                     <Col offset={1}>
                         <Search
@@ -67,9 +73,9 @@ class Search extends react.Component {
                 <Row>
                     <Col>
                         <List
-                            style={{margin:'30px'}}
+                            style={{ margin: '30px' }}
                             itemLayout="horizontal"
-                            dataSource={data}
+                            dataSource={this.state.data}
                             renderItem={item => (
                                 <List.Item>
                                     <List.Item.Meta
