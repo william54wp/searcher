@@ -1,44 +1,49 @@
 import react from 'react';
-import { Input, Row, Col, List, Icon, Avatar } from 'antd';
+import { Input, Row, Col, List, Avatar, Pagination } from 'antd';
+import { connect } from 'dva';
 
-class Search extends react.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: [
-                {
-                    title: 'Ant Design Title 1',
-                },
-                {
-                    title: 'Ant Design Title 2',
-                },
-                {
-                    title: 'Ant Design Title 3',
-                },
-                {
-                    title: 'Ant Design Title 4',
-                },
-                {
-                    title: 'Ant Design Title 4',
-                },
-                {
-                    title: 'Ant Design Title 4',
-                },
-                {
-                    title: 'Ant Design Title 4',
-                },
-                {
-                    title: 'Ant Design Title 4',
-                },
-                {
-                    title: 'Ant Design Title 4',
-                },
-                {
-                    title: 'Ant Design Title 4',
-                },
-            ]
+const namespace = 'search';
+
+const mapStateToProps = (state) => {
+    const searchResult = state[namespace];
+    return {
+        searchResult: searchResult.data,
+        size: searchResult.size,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+
+        onSearch: (keyword) => {
+            const action = {
+                type: `${namespace}/querySearch`,
+                payload: keyword
+            };
+            dispatch(action);
+        },
+
+        onChangePage: (page) => {
+            const action = {
+                type: `${namespace}/page`,
+                payload: {
+                    page: page,
+                    // keyword: this.keyword
+                }
+            };
+            dispatch(action);
         }
     }
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
+
+class Search extends react.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
     render() {
         const Search = Input.Search;
         const style = {
@@ -48,44 +53,52 @@ class Search extends react.Component {
         };
         return (
             <div>
-                {/* row of input */}
+                {/* row of search input */}
                 <Row type="flex" justify="start" align="middle" style={{ height: '12vh' }}>
                     <Col offset={1}>
                         <Search
                             style={style}
-                            placeholder='请输入搜索内容'
+                            placeholder={this.props.keyword}
                             enterButton
                             size='large'
                             onSearch={
                                 (value) => {
-                                    console.log(value);
+                                    this.props.onSearch(value);
                                 }
                             }
                         />
                     </Col>
                 </Row>
+                {/* row of description */}
                 <Row>
                     <Col offset={1}>
-                        <p>10条记录，共5页，第1页</p>
+                        <p>{this.props.size} 条记录，共5页，第1页</p>
                     </Col>
                 </Row>
                 <hr />
+                {/* row of searchResult */}
                 <Row>
-                    <Col>
+                    <Col style={
+                        {
+                            margin: '20px 50px'
+                        }
+                    }>
                         <List
-                            style={{ margin: '30px' }}
-                            itemLayout="horizontal"
-                            dataSource={this.state.data}
-                            renderItem={item => (
-                                <List.Item>
-                                    <List.Item.Meta
-                                        avatar={<Avatar size={48} icon="book" />}
-                                        title={<a href="https://ant.design">{item.title}</a>}
-                                        description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                                    />
-                                </List.Item>
-                            )}
+                            itemLayout='horizontal'
+                            dataSource={this.props.searchResult}
+                            renderItem={
+                                item => (
+                                    <List.Item>
+                                        <List.Item.Meta
+                                            avatar={<Avatar size='large' icon='book' />}
+                                            title={item.title}
+                                            description={item.content}
+                                        />
+                                    </List.Item>
+                                )
+                            }
                         />
+                        <Pagination defaultCurrent={1} total={50} onChange={this.props.onChangePage} />
                     </Col>
                 </Row>
             </div>
