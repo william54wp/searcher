@@ -4,23 +4,19 @@ export default {
     namespace: 'search',
     state: {
         size: 0,
-        keyword:'demo',
-        data: [
-        ]
+        keyword: '',
+        data: []
     },
     effects: {
-        *querySearch({ payload: keyword }, { call, put }) {
+        * querySearch({ payload: keyword }, { call, put }) {
             const URL = '/search.php?s=' + keyword;
-            const QueryParam = {
-                headers: new Headers(
-                )
-            }
+            const QueryParam = {}
             const searchResult = yield call(request, URL, QueryParam);
             yield put({ type: 'onLoad', payload: searchResult });
         },
 
-        *page({ payload: pageInfo }, { call, put }) {
-            const URL = '/search.php?p=' + pageInfo.page + 's=' + pageInfo.keyword;
+        * page({ payload: pageInfo }, { call, put }) {
+            const URL = '/search.php?p=' + pageInfo.page + '&s=' + pageInfo.keyword;
             console.log(URL);
         }
     },
@@ -28,7 +24,7 @@ export default {
         onLoad(state, { payload: searchResult }) {
             return {
                 size: searchResult.size,
-                data: searchResult.data
+                data: searchResult.data,
             }
         }
     }

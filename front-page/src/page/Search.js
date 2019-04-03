@@ -28,7 +28,6 @@ const mapDispatchToProps = (dispatch) => {
                 type: `${namespace}/page`,
                 payload: {
                     page: page,
-                    // keyword: this.keyword
                 }
             };
             dispatch(action);
@@ -44,6 +43,11 @@ class Search extends react.Component {
         super(props);
     }
 
+    componentDidMount() {
+        const keyword = 'demo';
+        this.props.onSearch(keyword);
+    }
+
     render() {
         const Search = Input.Search;
         const style = {
@@ -51,6 +55,7 @@ class Search extends react.Component {
             boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
             border: '1px solid #e8e8e8',
         };
+
         return (
             <div>
                 {/* row of search input */}
@@ -72,7 +77,7 @@ class Search extends react.Component {
                 {/* row of description */}
                 <Row>
                     <Col offset={1}>
-                        <p>{this.props.size} 条记录，共5页，第1页</p>
+                        <p>{this.props.size} 条记录</p>
                     </Col>
                 </Row>
                 <hr />
@@ -86,19 +91,23 @@ class Search extends react.Component {
                         <List
                             itemLayout='horizontal'
                             dataSource={this.props.searchResult}
+                            pagination={{
+                                position:'top',
+                                pageSize: 10
+                            }}
                             renderItem={
                                 item => (
                                     <List.Item>
                                         <List.Item.Meta
                                             avatar={<Avatar size='large' icon='book' />}
                                             title={item.title}
-                                            description={item.content}
+                                            description={item.path}
                                         />
+                                        {item.content}
                                     </List.Item>
                                 )
                             }
                         />
-                        <Pagination defaultCurrent={1} total={50} onChange={this.props.onChangePage} />
                     </Col>
                 </Row>
             </div>

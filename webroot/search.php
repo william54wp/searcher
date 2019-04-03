@@ -17,21 +17,8 @@ $search = new api\Searcher;
 
 $keyword = $_GET['s'];
 
-if (isset($_GET['p']) && $_GET['p'] > 1) {
-    $page = $_GET['p'];
-} else {
-    $page = 1;
-}
-;
-$pagesize = 20;
-$result = $search->search($keyword, $pagesize, $page);
+$searchResult = $search->search($keyword);
 
-printf("共计%s条记录，共%s页，第%s页", $result['size'], ceil($result['size'] / $pagesize), $page);
+var_dump($searchResult);
 
-echo "<dl>";
-foreach ($result['data'] as $item) {
-    printf("<dt>%s:<b>[%s]</b>&nbsp;%s</dt>", $item->id, $item->title, $item->path);
-    printf("<dd>%s</dd>", $item->content);
-    printf("<hr/>");
-}
-echo "</dl>";
+echo json_encode(['size' => $searchResult['size'], 'data' => $data]);

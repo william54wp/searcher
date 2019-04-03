@@ -13,6 +13,7 @@
  */
 
 namespace api;
+
 require_once 'api/xunsearch/lib/XS.php';
 /**
  * Class Search
@@ -28,11 +29,11 @@ require_once 'api/xunsearch/lib/XS.php';
 class Searcher
 {
     protected $xs;
-    
+
     /**
      * Class Init
      */
-    function __construct()
+    public function __construct()
     {
         $this->xs = new \XS('novel');
     }
@@ -61,13 +62,44 @@ class Searcher
     /**
      * Public action for Search from xunsearch server
      *
+     * @param string $query content
+     *
+     * @return array result
+     */
+    public function search($query)
+    {
+        try {
+            $search = $this->xs->search;
+            $search->setQuery($query);
+            $search->setLimit(100);
+            $data = $search->search();
+            $count = $search->count();
+            $result = [];
+            foreach ($data as $item) {
+                array_push($result, [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'content' => $search->highlight($item->content),
+                    'path' => $item->path,
+                ]);
+            }
+            return ['status' => true, 'size' => $count, 'data' => $result];
+        } catch (\Exception $e) {
+            return ['status' => false,
+                'msg' => $e,
+            ];
+        }
+    }
+    /**
+     * Public action for Search from xunsearch server
+     *
      * @param string $query    content
      * @param int    $pagesize pagesize of return
      * @param int    $page     page of return
      *
      * @return array result
      */
-    public function search($query, $pagesize = 10, $page = 1)
+    public function searchPage($query, $pagesize = 10, $page = 1)
     {
         $offset = $pagesize * ($page - 1);
         try {
