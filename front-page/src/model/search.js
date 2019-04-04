@@ -5,7 +5,7 @@ export default {
     state: {
         size: 0,
         page: 1,
-        keyword: 'demo keyword',
+        keyword: '',
         data: []
     },
 
