@@ -1,6 +1,7 @@
 import react from 'react';
 import { Input, Row, Col, List, Avatar, Pagination } from 'antd';
 import { connect } from 'dva';
+import search from '../model/search';
 
 const namespace = 'search';
 
@@ -9,12 +10,13 @@ const mapStateToProps = (state) => {
     return {
         searchResult: searchResult.data,
         size: searchResult.size,
+        keyword: searchResult.keyword,
+        page: searchResult.page
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-
         onSearch: (keyword) => {
             const action = {
                 type: `${namespace}/querySearch`,
@@ -26,9 +28,7 @@ const mapDispatchToProps = (dispatch) => {
         onChangePage: (page) => {
             const action = {
                 type: `${namespace}/page`,
-                payload: {
-                    page: page,
-                }
+                payload: page
             };
             dispatch(action);
         }
@@ -41,11 +41,7 @@ class Search extends react.Component {
 
     constructor(props) {
         super(props);
-    }
-
-    componentDidMount() {
-        const keyword = 'demo';
-        this.props.onSearch(keyword);
+        // console.log(this.props.page);
     }
 
     render() {
@@ -59,16 +55,21 @@ class Search extends react.Component {
         return (
             <div>
                 {/* row of search input */}
-                <Row type="flex" justify="start" align="middle" style={{ height: '12vh' }}>
+                <Row
+                    type="flex"
+                    justify="start"
+                    align="middle"
+                    style={
+                        { height: '10vh' }
+                    }>
                     <Col offset={1}>
-                        <Search
-                            style={style}
+                        <Search style={style}
                             placeholder={this.props.keyword}
-                            enterButton
-                            size='large'
+                            enterButton size='large'
                             onSearch={
                                 (value) => {
                                     this.props.onSearch(value);
+                                    // this.onSearch(value);
                                 }
                             }
                         />
@@ -77,7 +78,7 @@ class Search extends react.Component {
                 {/* row of description */}
                 <Row>
                     <Col offset={1}>
-                        <p>{this.props.size} 条记录</p>
+                        <p> {this.props.size} 条记录，当前第 {this.props.page} 页 </p>
                     </Col>
                 </Row>
                 <hr />
@@ -88,23 +89,30 @@ class Search extends react.Component {
                             margin: '20px 50px'
                         }
                     }>
-                        <List
-                            itemLayout='horizontal'
+                        <List itemLayout='horizontal'
                             dataSource={this.props.searchResult}
-                            pagination={{
-                                position:'top',
-                                pageSize: 10
-                            }}
+                            pagination={
+                                {
+                                    position: 'top',
+                                    pageSize: 8,
+                                    onChange: (value) => {
+                                        this.props.onChangePage(value)
+                                    },
+                                    current: this.props.page,
+                                    total: this.props.size
+
+                                }
+                            }
                             renderItem={
-                                item => (
-                                    <List.Item>
-                                        <List.Item.Meta
-                                            avatar={<Avatar size='large' icon='book' />}
-                                            title={item.title}
-                                            description={item.path}
-                                        />
-                                        {item.content}
-                                    </List.Item>
+                                item => (<List.Item>
+                                    <List.Item.Meta avatar={< Avatar size='large'
+                                        icon='book' />
+                                    }
+                                        title={item.title}
+                                        description={item.path}
+                                    />
+                                    {item.content}
+                                </List.Item>
                                 )
                             }
                         />

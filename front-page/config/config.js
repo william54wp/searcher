@@ -11,5 +11,10 @@ export default {
     routes: [{
         path: '/',
         component: './Search'
-    }]
+    }],
+    proxy: {
+        '/search.php': {
+            target: 'http://localhost:8080'
+        }
+    }
 }

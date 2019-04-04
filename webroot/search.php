@@ -16,9 +16,8 @@ require_once 'api.php';
 $search = new api\Searcher;
 
 $keyword = $_GET['s'];
+$page = $_GET['p'];
 
-$searchResult = $search->search($keyword);
+$searchResult = $search->searchPage($keyword, 8, $page);
 
-var_dump($searchResult);
-
-echo json_encode(['size' => $searchResult['size'], 'data' => $data]);
+echo json_encode($searchResult);

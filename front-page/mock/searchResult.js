@@ -1,10 +1,10 @@
 const result = {
-    'size': 17,
+    'size': 200,
     'data': [{
             'id': 1,
             'title': 'test title',
             'path': './sdafas./sdfadsf.txt',
-            'content': 'demo content demo content demo content demo content demo content demo content '
+            'content': 'demo <em>content</em> demo content demo content demo content demo content demo content '
         },
         {
             'id': 2,
@@ -89,7 +89,7 @@ const result = {
     ]
 }
 export default {
-    'get /search.php': function(req, res) {
-        res.json(result);
-    }
+    // 'get /search.php': function(req, res) {
+    //     res.json(result);
+    // }
 }

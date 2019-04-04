@@ -71,17 +71,18 @@ class Searcher
         try {
             $search = $this->xs->search;
             $search->setQuery($query);
-            $search->setLimit(100);
+            $search->setLimit(8);
             $data = $search->search();
             $count = $search->count();
             $result = [];
             foreach ($data as $item) {
-                array_push($result, [
+                $searchResultItem = [
                     'id' => $item->id,
                     'title' => $item->title,
-                    'content' => $search->highlight($item->content),
+                    'content' => $item->content,
                     'path' => $item->path,
-                ]);
+                ];
+                array_push($result, $searchResultItem);
             }
             return ['status' => true, 'size' => $count, 'data' => $result];
         } catch (\Exception $e) {
@@ -108,7 +109,17 @@ class Searcher
             $search->setLimit($pagesize, $offset);
             $data = $search->search();
             $count = $search->count();
-            return ['status' => true, 'size' => $count, 'data' => $data];
+            $result = [];
+            foreach ($data as $item) {
+                $searchResultItem = [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'content' => $item->content,
+                    'path' => $item->path,
+                ];
+                array_push($result, $searchResultItem);
+            }
+            return ['status' => true, 'size' => $count, 'data' => $result];
         } catch (\Exception $e) {
             return ['status' => false,
                 'msg' => $e,
